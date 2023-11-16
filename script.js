@@ -35,14 +35,17 @@ document.addEventListener('DOMContentLoaded', () => {
     function handleCellClick(event) {
         const cell = event.target;
         const cellId = parseInt(cell.id);
-
+    
         if (minePositions.includes(cellId)) {
-            cell.classList.add('mine');
-            cell.textContent = '💣';
-            alert('Game Over!');
-            initializeGame();
+            cell.innerHTML = '💣'; // 地雷を表す絵文字を表示
+            cell.style.backgroundColor = 'red'; // 地雷セルの背景色を変更（オプション）
+            setTimeout(() => { 
+                alert('Game Over!'); // ゲームオーバーの警告（絵文字が表示されてからアラートを表示）
+                initializeGame();   // ゲームをリセット
+            }, 100); 
         } else {
             cell.textContent = getAdjacentMineCount(cellId);
+            cell.style.pointerEvents = 'none'; // 既にクリックされたセルは再度クリック不可にする
         }
     }
 
