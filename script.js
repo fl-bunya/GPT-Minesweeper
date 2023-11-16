@@ -35,17 +35,48 @@ document.addEventListener('DOMContentLoaded', () => {
     function handleCellClick(event) {
         const cell = event.target;
         const cellId = parseInt(cell.id);
-    
+
         if (minePositions.includes(cellId)) {
-            cell.innerHTML = '💣'; // 地雷を表す絵文字を表示
-            cell.style.backgroundColor = 'red'; // 地雷セルの背景色を変更（オプション）
-            setTimeout(() => { 
-                alert('Game Over!'); // ゲームオーバーの警告（絵文字が表示されてからアラートを表示）
-                initializeGame();   // ゲームをリセット
-            }, 100); 
+            cell.innerHTML = '💣';
+            cell.style.backgroundColor = 'red';
+            setTimeout(() => {
+                alert('Game Over!');
+                initializeGame();
+            }, 100);
         } else {
-            cell.textContent = getAdjacentMineCount(cellId);
-            cell.style.pointerEvents = 'none'; // 既にクリックされたセルは再度クリック不可にする
+            openCell(cell);
+        }
+    }
+
+    function openCell(cell) {
+        const cellId = parseInt(cell.id);
+        const adjacentMineCount = getAdjacentMineCount(cellId);
+
+        cell.textContent = adjacentMineCount === 0 ? '' : adjacentMineCount;
+        cell.classList.add('opened');
+        cell.style.pointerEvents = 'none';
+
+        if (adjacentMineCount === 0) {
+            openAdjacentCells(cellId);
+        }
+    }
+
+    function openAdjacentCells(cellId) {
+        const x = cellId % gridSize;
+        const y = Math.floor(cellId / gridSize);
+
+        for (let dx = -1; dx <= 1; dx++) {
+            for (let dy = -1; dy <= 1; dy++) {
+                const nx = x + dx;
+                const ny = y + dy;
+                if (nx >= 0 && nx < gridSize && ny >= 0 && ny < gridSize) {
+                    const neighborId = ny * gridSize + nx;
+                    const neighborCell = document.getElementById(neighborId.toString());
+                    if (!neighborCell.classList.contains('opened')) {
+                        openCell(neighborCell);
+                    }
+                }
+            }
         }
     }
 
