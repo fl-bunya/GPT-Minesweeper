@@ -18,3 +18,7 @@
     background-color: #bada55; /* 明るい緑色、あるいはお好みの色に変更 */
     color: black; /* 文字色 */
 }
+
+.flag {
+  color: red; /* 旗の色 */
+}

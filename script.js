@@ -17,9 +17,10 @@ document.addEventListener('DOMContentLoaded', () => {
             cell.id = i;
             cell.classList.add('cell');
             cell.addEventListener('click', handleCellClick);
+            cell.addEventListener('contextmenu', toggleFlag); // 右クリックイベントリスナーを追加
             minefield.appendChild(cell);
         }
-    }
+    }    
 
     function placeMines() {
         let minesPlaced = 0;
@@ -101,5 +102,20 @@ document.addEventListener('DOMContentLoaded', () => {
         return count;
     }
 
+    function toggleFlag(event) {
+        event.preventDefault(); // 右クリックメニューのデフォルトの動作を防止
+        const cell = event.target;
+    
+        if (cell.classList.contains('opened')) {
+            return; // 既に開かれたセルには何もしない
+        }
+    
+        if (cell.textContent === '🚩') {
+            cell.textContent = ''; // 旗を解除
+        } else {
+            cell.textContent = '🚩'; // 旗を設定
+        }
+    }
+    
     initializeGame();
 });
