@@ -130,9 +130,18 @@ document.addEventListener('DOMContentLoaded', () => {
     
         if (openedCells === (gridSize * gridSize - mineCount)) {
             alert('おめでとう！ゲームクリアです！');
+            playConfetti(); // 紙吹雪を実行
             initializeGame(); // ゲームをリセット
         }
     }
     
+    function playConfetti() {
+        confetti({
+            particleCount: 100,
+            spread: 70,
+            origin: { y: 0.6 }
+        });
+    }
+
     initializeGame();
 });
