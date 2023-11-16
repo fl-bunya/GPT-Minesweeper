@@ -13,3 +13,8 @@
   line-height: 40px;
   cursor: pointer;
 }
+
+.opened {
+    background-color: #bada55; /* 明るい緑色、あるいはお好みの色に変更 */
+    color: black; /* 文字色 */
+}

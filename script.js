@@ -51,11 +51,11 @@ document.addEventListener('DOMContentLoaded', () => {
     function openCell(cell) {
         const cellId = parseInt(cell.id);
         const adjacentMineCount = getAdjacentMineCount(cellId);
-
+    
         cell.textContent = adjacentMineCount === 0 ? '' : adjacentMineCount;
-        cell.classList.add('opened');
+        cell.classList.add('opened'); // ここで 'opened' クラスを追加
         cell.style.pointerEvents = 'none';
-
+    
         if (adjacentMineCount === 0) {
             openAdjacentCells(cellId);
         }
