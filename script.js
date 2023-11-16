@@ -60,6 +60,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (adjacentMineCount === 0) {
             openAdjacentCells(cellId);
         }
+
+        checkGameClear();
     }
 
     function openAdjacentCells(cellId) {
@@ -114,6 +116,21 @@ document.addEventListener('DOMContentLoaded', () => {
             cell.textContent = ''; // 旗を解除
         } else {
             cell.textContent = '🚩'; // 旗を設定
+        }
+    }
+
+    function checkGameClear() {
+        let openedCells = 0;
+        for (let i = 0; i < gridSize * gridSize; i++) {
+            const cell = document.getElementById(i.toString());
+            if (cell.classList.contains('opened')) {
+                openedCells++;
+            }
+        }
+    
+        if (openedCells === (gridSize * gridSize - mineCount)) {
+            alert('おめでとう！ゲームクリアです！');
+            initializeGame(); // ゲームをリセット
         }
     }
     
