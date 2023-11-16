@@ -1,58 +1,71 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const grid = document.querySelector('#game');
-    const gridSize = 10;
-    const mineCount = 20;
-    let cells = [];
+    const minefield = document.getElementById('minefield');
+    const gridSize = 8;
+    const mineCount = 10;
+    let minePositions = [];
 
-    // ゲームの初期化
-    function init() {
-        // セルの作成
+    function initializeGame() {
+        minefield.innerHTML = '';
+        minePositions = [];
+        generateMinefield();
+        placeMines();
+    }
+
+    function generateMinefield() {
         for (let i = 0; i < gridSize * gridSize; i++) {
             const cell = document.createElement('div');
-            cell.setAttribute('id', i);
+            cell.id = i;
             cell.classList.add('cell');
-            grid.appendChild(cell);
-            cells.push(cell);
-
-            // クリックイベント
-            cell.addEventListener('click', function(e) {
-                clickCell(cell);
-            });
+            cell.addEventListener('click', handleCellClick);
+            minefield.appendChild(cell);
         }
+    }
 
-        // 地雷の配置
+    function placeMines() {
         let minesPlaced = 0;
         while (minesPlaced < mineCount) {
-            const randomCell = Math.floor(Math.random() * cells.length);
-            const cell = cells[randomCell];
-            if (!cell.classList.contains('mine')) {
-                cell.classList.add('mine');
+            const randomPosition = Math.floor(Math.random() * gridSize * gridSize);
+            if (!minePositions.includes(randomPosition)) {
+                minePositions.push(randomPosition);
                 minesPlaced++;
             }
         }
     }
 
-    // セルのクリック処理
-    function clickCell(cell) {
-        if (cell.classList.contains('mine')) {
-            alert('Game Over');
-            // ゲームオーバーの処理
-            revealMines();
+    function handleCellClick(event) {
+        const cell = event.target;
+        const cellId = parseInt(cell.id);
+
+        if (minePositions.includes(cellId)) {
+            cell.classList.add('mine');
+            cell.textContent = '💣';
+            alert('Game Over!');
+            initializeGame();
         } else {
-            // 安全なセルの処理
-            cell.style.backgroundColor = '#ddd';
+            cell.textContent = getAdjacentMineCount(cellId);
         }
     }
 
-    // 全ての地雷を表示
-    function revealMines() {
-        cells.forEach(cell => {
-            if (cell.classList.contains('mine')) {
-                cell.innerHTML = '💣';
-                cell.style.backgroundColor = '#f88';
+    function getAdjacentMineCount(cellId) {
+        let count = 0;
+        const x = cellId % gridSize;
+        const y = Math.floor(cellId / gridSize);
+
+        for (let dx = -1; dx <= 1; dx++) {
+            for (let dy = -1; dy <= 1; dy++) {
+                if (dx === 0 && dy === 0) continue;
+                const nx = x + dx;
+                const ny = y + dy;
+                if (nx >= 0 && nx < gridSize && ny >= 0 && ny < gridSize) {
+                    const neighborId = ny * gridSize + nx;
+                    if (minePositions.includes(neighborId)) {
+                        count++;
+                    }
+                }
             }
-        });
+        }
+        return count;
     }
 
-    init();
+    initializeGame();
 });
